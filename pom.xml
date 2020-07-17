@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ufpb.minicurso</groupId>
-	<artifactId>lab1</artifactId>
+	<artifactId>lab2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>lab1</name>
 	<description>Demo project for Spring Boot</description>
@@ -35,6 +35,25 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<!--JPA-->
+		<dependency>
+  			<groupId>org.springframework.data </groupId>
+  			<artifactId>spring-data-jpa </artifactId>
+ 		</dependency>
+ 		
+ 		<!--H2 Database-->
+ 		<dependency>
+  			<groupId>com.h2database</groupId>
+ 			 <artifactId>h2</artifactId>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.eclipse.persistence</groupId>
+    		<artifactId>javax.persistence</artifactId>
+   			<version>2.0.0</version>
+    		<scope>compile</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -45,5 +64,16 @@
 			</plugin>
 		</plugins>
 	</build>
+
+<repositories>
+	<repository>
+		<id>spring-libs-release </id>
+  		<name>Spring Releases </name>
+  		<url>https://repo.spring.io/libs-release </url>
+  		<snapshots>
+  			<enabled>false</enabled>
+  		</snapshots>
+ 	</repository>
+</repositories>
 
 </project>

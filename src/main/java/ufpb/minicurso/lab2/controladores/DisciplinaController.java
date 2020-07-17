@@ -1,4 +1,4 @@
-package ufpb.minicurso.lab1.controladores;
+package ufpb.minicurso.lab2.controladores;
 
 import java.util.List;
 
@@ -14,16 +14,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ufpb.minicurso.lab1.entidades.Disciplina;
-import ufpb.minicurso.lab1.services.DisciplinaService;
+import ufpb.minicurso.lab2.entidades.Disciplina;
+import ufpb.minicurso.lab2.services.DisciplinaService;
 
 @RestController
 public class DisciplinaController {
+	
   @Autowired
   private DisciplinaService disciplinaService;
   
   @GetMapping("/v1/api/disciplinas")
-  public ResponseEntity<List<Disciplina>> getSaudacao() {
+  public ResponseEntity<List<Disciplina>> getDisciplina() {
 	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getDisciplina(), HttpStatus.OK);
   }
   
@@ -36,9 +37,14 @@ public class DisciplinaController {
 	}
   }
   
-  @GetMapping("/v1/api/disciplinas/ranking")
-  public ResponseEntity<List<Disciplina>> getRankingDisciplinas() {
-	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getRankingDisciplinas(), HttpStatus.OK);
+  @GetMapping("/v1/api/disciplinas/ranking/notas")
+  public ResponseEntity<List<Disciplina>> getRankingDisciplinasByNotas() {
+	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getRankingDisciplinasByNotas(), HttpStatus.OK);
+  }
+  
+  @GetMapping("/v1/api/disciplinas/ranking/likes")
+  public ResponseEntity<List<Disciplina>> getRankingDisciplinasByLikes() {
+	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getRankingDisciplinasByLikes(), HttpStatus.OK);
   }
   
   @PostMapping("/v1/api/disciplinas")
@@ -55,10 +61,19 @@ public class DisciplinaController {
 	}
   }
   
-  @PutMapping("v1/api/disciplinas/{id}/nota")
+  @PutMapping("v1/api/disciplinas/nota/{id}")
   public ResponseEntity<Disciplina> setNotaDisciplinaById(@PathVariable Integer id, @RequestParam(value = "nota", defaultValue = "nota") String nota) {
 	try {
 		return new ResponseEntity<Disciplina>(disciplinaService.setNotaDisciplinaById(id,nota), HttpStatus.OK);
+	} catch(ArrayIndexOutOfBoundsException aiobe) {
+		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
+	}
+  }
+  
+  @PutMapping("v1/api/disciplinas/likes/{id}")
+  public ResponseEntity<Disciplina> incrementaLikesDisciplinaById(@PathVariable Integer id) {
+	  try {
+		return new ResponseEntity<Disciplina>(disciplinaService.incrementaLikesDisciplinaById(id), HttpStatus.OK);
 	} catch(ArrayIndexOutOfBoundsException aiobe) {
 		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
 	}
