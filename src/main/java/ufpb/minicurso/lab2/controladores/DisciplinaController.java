@@ -1,6 +1,7 @@
 package ufpb.minicurso.lab2.controladores;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,67 +24,76 @@ public class DisciplinaController {
   @Autowired
   private DisciplinaService disciplinaService;
   
-  @GetMapping("/v1/api/disciplinas")
+  @GetMapping("/disciplinas")
   public ResponseEntity<List<Disciplina>> getDisciplina() {
 	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getDisciplina(), HttpStatus.OK);
   }
   
-  @GetMapping("v1/api/disciplinas/{id}")
+  @GetMapping("/disciplinas/{id}")
   public ResponseEntity<Disciplina> getDisciplinaById(@PathVariable Integer id) {
 	try {
 		return new ResponseEntity<Disciplina>(disciplinaService.getDisciplinaById(id), HttpStatus.OK);
-	} catch(ArrayIndexOutOfBoundsException aiobe) {
+	} catch(NoSuchElementException aiobe) {
 		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
 	}
   }
   
-  @GetMapping("/v1/api/disciplinas/ranking/notas")
+  @GetMapping("/disciplinas/ranking/notas")
   public ResponseEntity<List<Disciplina>> getRankingDisciplinasByNotas() {
 	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getRankingDisciplinasByNotas(), HttpStatus.OK);
   }
   
-  @GetMapping("/v1/api/disciplinas/ranking/likes")
+  @GetMapping("/disciplinas/ranking/likes")
   public ResponseEntity<List<Disciplina>> getRankingDisciplinasByLikes() {
 	  return new ResponseEntity<List<Disciplina>>(disciplinaService.getRankingDisciplinasByLikes(), HttpStatus.OK);
   }
   
-  @PostMapping("/v1/api/disciplinas")
+  @PostMapping("/disciplinas")
   public ResponseEntity<Disciplina> setNovaDisciplina(@RequestBody Disciplina novaDisciplina) {
 	  return new ResponseEntity<Disciplina>(disciplinaService.setNovaDisciplina(novaDisciplina), HttpStatus.CREATED);
   }
   
-  @PutMapping("v1/api/disciplinas/{id}/nome")
+  @PutMapping("/disciplinas/{id}/nome")
   public ResponseEntity<Disciplina> setNomeDisciplinaById(@PathVariable Integer id, @RequestParam(value = "nome", defaultValue = "disciplina") String nome) {
 	try {
 		return new ResponseEntity<Disciplina>(disciplinaService.setNomeDisciplinaById(id,nome), HttpStatus.OK);
-	} catch(ArrayIndexOutOfBoundsException aiobe) {
+	} catch(NoSuchElementException aiobe) {
 		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
 	}
   }
   
-  @PutMapping("v1/api/disciplinas/nota/{id}")
-  public ResponseEntity<Disciplina> setNotaDisciplinaById(@PathVariable Integer id, @RequestParam(value = "nota", defaultValue = "nota") String nota) {
-	try {
-		return new ResponseEntity<Disciplina>(disciplinaService.setNotaDisciplinaById(id,nota), HttpStatus.OK);
-	} catch(ArrayIndexOutOfBoundsException aiobe) {
-		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
-	}
-  }
-  
-  @PutMapping("v1/api/disciplinas/likes/{id}")
+  @PutMapping("/disciplinas/likes/{id}")
   public ResponseEntity<Disciplina> incrementaLikesDisciplinaById(@PathVariable Integer id) {
 	  try {
 		return new ResponseEntity<Disciplina>(disciplinaService.incrementaLikesDisciplinaById(id), HttpStatus.OK);
-	} catch(ArrayIndexOutOfBoundsException aiobe) {
+	} catch(NoSuchElementException aiobe) {
 		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
 	}
   }
   
-  @DeleteMapping("v1/api/disciplinas/{id}")
+  @PutMapping("/disciplinas/nota/{id}")
+  public ResponseEntity<Disciplina> setNotaDisciplinaById(@PathVariable Integer id, @RequestBody String nota) {
+	  try {
+		  return new ResponseEntity<Disciplina>(disciplinaService.setNotaDisciplinaById(id,nota), HttpStatus.OK);
+	  } catch(NoSuchElementException aiobe) {
+		  return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
+	  }
+  }
+  
+  @PutMapping("/disciplinas/comentarios/{id}")
+  public ResponseEntity<Disciplina> inserirComentarioDisciplinaById(@PathVariable Integer id, @RequestBody String comentario) {
+	  try {
+		return new ResponseEntity<Disciplina>(disciplinaService.inserirComentarioDisciplinaById(id, comentario), HttpStatus.OK);
+	} catch(NoSuchElementException aiobe) {
+		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
+	}
+  }
+  
+  @DeleteMapping("/disciplinas/{id}")
   public ResponseEntity<Disciplina> removeDisciplinaById(@PathVariable Integer id) {
 	try {
 		return new ResponseEntity<Disciplina>(disciplinaService.removeDisciplinaById(id), HttpStatus.OK);
-	} catch(ArrayIndexOutOfBoundsException aiobe) {
+	} catch(NoSuchElementException aiobe) {
 		return new ResponseEntity<Disciplina>(new Disciplina(null, 0), HttpStatus.NOT_FOUND);
 	}
   }

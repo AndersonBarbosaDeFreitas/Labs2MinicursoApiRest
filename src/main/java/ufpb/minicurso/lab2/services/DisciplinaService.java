@@ -5,16 +5,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ufpb.minicurso.lab2.entidades.Disciplina;
-import ufpb.minicurso.lab2.repositorios.DisciplinasRepository;
+import ufpb.minicurso.lab2.repository.DisciplinasRepository;
 
 @Service
 public class DisciplinaService {
 
-	@Autowired(required=true)
+	@Autowired
 	private DisciplinasRepository<Disciplina, Integer> disciplinasDAO;
 
 	public List<Disciplina> getDisciplina() {
@@ -22,10 +23,14 @@ public class DisciplinaService {
 	}
 
 	public Disciplina getDisciplinaById(Integer id) {
-		if (disciplinasDAO.count() == 0)
+		if (disciplinasDAO.count() == 0 || id <= 0 || id > (int) disciplinasDAO.count()) {
+			throw new NoSuchElementException();
+		}
+		
+		if (!disciplinasDAO.findById(id).isPresent())
 			throw new NoSuchElementException();
 
-		Disciplina disciplina = disciplinasDAO.findById((int) disciplinasDAO.count()).get();
+		Disciplina disciplina = disciplinasDAO.findById(id).get();
 		return disciplina;
 	}
 	
@@ -50,11 +55,12 @@ public class DisciplinaService {
 
 	public Disciplina setNomeDisciplinaById(Integer id, String nome) {
 		if (disciplinasDAO.count() == 0 || id <= 0 || id > (int) disciplinasDAO.count()) {
-
+			throw new NoSuchElementException();
 		}
 
 		if (!disciplinasDAO.findById(id).isPresent())
 			throw new NoSuchElementException();
+			
 
 		Disciplina disciplina = disciplinasDAO.findById(id).get();
 		disciplina.setNome(nome);
@@ -64,21 +70,22 @@ public class DisciplinaService {
 	
 	public Disciplina setNotaDisciplinaById(Integer id, String nota) {
 		if (disciplinasDAO.count() == 0 || id <= 0 || id > (int) disciplinasDAO.count()) {
-
+			throw new NoSuchElementException();
 		}
 
 		if (!disciplinasDAO.findById(id).isPresent())
 			throw new NoSuchElementException();
 
+		JSONObject jsonObj = new JSONObject(nota);
 		Disciplina disciplina = disciplinasDAO.findById(id).get();
-		disciplina.setNota((Double.parseDouble(nota) + disciplina.getNota())/2);
+		disciplina.setNota((jsonObj.getDouble("nota") + disciplina.getNota()) / 2);
 		disciplinasDAO.save(disciplina);
 		return disciplinasDAO.findById(id).get();
 	}
 	
 	public Disciplina removeDisciplinaById(Integer id) {
 		if (disciplinasDAO.count() == 0 || id <= 0 || id > (int) disciplinasDAO.count()) {
-			throw new ArrayIndexOutOfBoundsException();
+			throw new NoSuchElementException();
 		}
 		Disciplina disciplina = disciplinasDAO.findById(id).get();
 		disciplinasDAO.delete(disciplina);
@@ -87,7 +94,7 @@ public class DisciplinaService {
 
 	public Disciplina incrementaLikesDisciplinaById(Integer id) {
 		if (disciplinasDAO.count() == 0 || id <= 0 || id > (int) disciplinasDAO.count()) {
-
+			throw new NoSuchElementException();
 		}
 
 		if (!disciplinasDAO.findById(id).isPresent())
@@ -95,6 +102,21 @@ public class DisciplinaService {
 
 		Disciplina disciplina = disciplinasDAO.findById(id).get();
 		disciplina.setLikes(disciplina.getLikes() + 1);
+		disciplinasDAO.save(disciplina);
+		return disciplinasDAO.findById(id).get();
+	}
+	
+	public Disciplina inserirComentarioDisciplinaById(Integer id, String comentario) {
+		if (disciplinasDAO.count() == 0 || id <= 0 || id > (int) disciplinasDAO.count()) {
+			throw new NoSuchElementException();
+		}
+
+		if (!disciplinasDAO.findById(id).isPresent())
+			throw new NoSuchElementException();
+		
+		JSONObject jsonObj = new JSONObject(comentario);
+		Disciplina disciplina = disciplinasDAO.findById(id).get();
+		disciplina.setComentarios(jsonObj.getString("comentarios"));
 		disciplinasDAO.save(disciplina);
 		return disciplinasDAO.findById(id).get();
 	}

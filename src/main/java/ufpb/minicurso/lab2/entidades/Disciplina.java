@@ -6,12 +6,19 @@ import javax.persistence.Id;
 
 @Entity
 public class Disciplina {
-	@Id @GeneratedValue
-	private long id;
+	
+
+	@Id
+	@GeneratedValue
+	private int id;
 	private String nome;
 	private double nota;
-	private String comentarios;
+	private String comentarios = "";
 	private int likes;
+	
+	public Disciplina() {
+		super();
+	}
 	
 	public Disciplina( String nome, double nota) {
 		super();
@@ -32,7 +39,7 @@ public class Disciplina {
 	}
 
 	public void setComentarios(String comentario) {
-		this.comentarios = comentario;
+		this.comentarios += comentario + ";\n";
 	}
 	
 	public int getLikes() {
@@ -51,6 +58,11 @@ public class Disciplina {
 		this.nota = nota;
 	}
 
-
-
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 }
