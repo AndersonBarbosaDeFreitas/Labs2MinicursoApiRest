@@ -7,7 +7,6 @@ import javax.persistence.Id;
 @Entity
 public class Disciplina {
 	
-
 	@Id
 	@GeneratedValue
 	private int id;
